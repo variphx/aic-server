@@ -2,7 +2,7 @@ use deadpool_diesel::postgres::Pool;
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl, SelectableHelper};
 
 use crate::{
-    entities::{keyframes::KeyframeEntity, videos::VideoEntity},
+    models::entities::{keyframes::KeyframeEntity, videos::VideoEntity},
     services::keyframes::KeyframeService,
 };
 

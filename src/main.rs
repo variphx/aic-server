@@ -8,16 +8,14 @@ use utoipa::OpenApi;
 use utoipa_axum::router::OpenApiRouter;
 use utoipa_swagger_ui::SwaggerUi;
 
-use crate::{docs::ApiDoc, states::AppState};
+use crate::{docs::ApiDoc, models::states::AppState};
 
 mod controllers;
 mod docs;
-mod dtos;
-mod entities;
+mod models;
 mod repositories;
 mod schema;
 mod services;
-mod states;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {

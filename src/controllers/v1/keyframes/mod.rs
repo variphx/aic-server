@@ -6,8 +6,9 @@ use axum::{
 use utoipa_axum::{router::OpenApiRouter, routes};
 
 use crate::{
-    docs::OPENAPI_TAG, dtos::keyframes::KeyframeDto, services::keyframes::KeyframeService,
-    states::AppState,
+    docs::OPENAPI_TAG,
+    models::{dtos::keyframes::KeyframeDto, states::AppState},
+    services::keyframes::KeyframeService,
 };
 
 pub fn router() -> OpenApiRouter<AppState> {

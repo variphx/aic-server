@@ -1,7 +1,7 @@
 use deadpool_diesel::postgres::Pool;
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl, SelectableHelper};
 
-use crate::{entities::videos::VideoEntity, services::videos::VideoService};
+use crate::{models::entities::videos::VideoEntity, services::videos::VideoService};
 
 #[derive(Clone)]
 pub struct VideoRepository<'a> {

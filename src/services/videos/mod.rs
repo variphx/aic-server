@@ -1,6 +1,9 @@
 use deadpool_diesel::postgres::Pool;
 
-use crate::{dtos::videos::VideoDto, repositories::videos::VideoRepository, states::AppState};
+use crate::{
+    models::{dtos::videos::VideoDto, states::AppState},
+    repositories::videos::VideoRepository,
+};
 
 #[derive(Clone, Copy)]
 pub struct VideoService<'a> {

@@ -1,7 +1,8 @@
 use deadpool_diesel::postgres::Pool;
 
 use crate::{
-    dtos::keyframes::KeyframeDto, repositories::keyframes::KeyframeRepository, states::AppState,
+    models::{dtos::keyframes::KeyframeDto, states::AppState},
+    repositories::keyframes::KeyframeRepository,
 };
 
 #[derive(Clone, Copy)]

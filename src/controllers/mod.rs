@@ -1,6 +1,6 @@
 use utoipa_axum::router::OpenApiRouter;
 
-use crate::states::AppState;
+use crate::models::states::AppState;
 
 mod v1;
 
