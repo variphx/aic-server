@@ -13,7 +13,7 @@ use hf_hub::api::tokio::ApiRepo;
 use qdrant_client::Qdrant;
 use tokenizers::Tokenizer;
 
-const MODEL_NAME: &str = "openai/clip-vit-base-patch32";
+use crate::constants::EMBEDDING_MODEL_NAME;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -26,7 +26,7 @@ pub struct AppState {
 
 impl AppState {
     pub async fn new() -> anyhow::Result<Self> {
-        let api = hf_hub::api::tokio::Api::new()?.model(MODEL_NAME.to_owned());
+        let api = hf_hub::api::tokio::Api::new()?.model(EMBEDDING_MODEL_NAME.to_owned());
         let device = Device::cuda_if_available(0)?;
 
         Ok(Self {
@@ -47,9 +47,8 @@ impl AppState {
     }
 
     fn qdrant_client_helper() -> anyhow::Result<Arc<Qdrant>> {
-        Ok(Arc::new(
-            Qdrant::from_url(&std::env::var("QDRANT_URL")?).build()?,
-        ))
+        let client = Qdrant::from_url(&std::env::var("QDRANT_URL")?).build()?;
+        Ok(Arc::new(client))
     }
 
     async fn model_helper(api: &ApiRepo, device: &Device) -> anyhow::Result<Arc<ClipModel>> {

@@ -1,6 +1,6 @@
 use utoipa::OpenApi;
 
-pub const OPENAPI_TAG: &str = "AIC Server";
+use crate::constants::OPENAPI_TAG;
 
 #[derive(OpenApi)]
 #[openapi(

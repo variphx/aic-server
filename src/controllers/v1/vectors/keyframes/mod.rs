@@ -2,7 +2,7 @@ use axum::{Json, extract::State, http::StatusCode};
 use utoipa_axum::{router::OpenApiRouter, routes};
 
 use crate::{
-    docs::OPENAPI_TAG,
+    constants::OPENAPI_TAG,
     models::{
         dtos::vectors::keyframes::{VectorizedKeyframeDto, VectorizedKeyframeRequestDto},
         states::AppState,

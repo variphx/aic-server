@@ -6,7 +6,7 @@ use axum::{
 use utoipa_axum::{router::OpenApiRouter, routes};
 
 use crate::{
-    docs::OPENAPI_TAG,
+    constants::OPENAPI_TAG,
     models::{dtos::videos::VideoDto, states::AppState},
     services::videos::VideoService,
 };

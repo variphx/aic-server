@@ -18,6 +18,7 @@ use utoipa_swagger_ui::SwaggerUi;
 
 use crate::{docs::ApiDoc, models::states::AppState};
 
+mod constants;
 mod controllers;
 mod docs;
 mod models;
