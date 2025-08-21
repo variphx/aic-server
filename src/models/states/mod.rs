@@ -10,10 +10,13 @@ use deadpool_diesel::{
     postgres::{Manager, Pool},
 };
 use hf_hub::api::tokio::ApiRepo;
-use qdrant_client::Qdrant;
+use qdrant_client::{
+    Qdrant,
+    qdrant::{CreateCollectionBuilder, Distance, VectorParamsBuilder},
+};
 use tokenizers::Tokenizer;
 
-use crate::constants::EMBEDDING_MODEL_NAME;
+use crate::constants::{EMBEDDING_MODEL_NAME, QDRANT_KEYFRAME_COLLECTION_NAME};
 
 #[derive(Clone)]
 pub struct AppState {
@@ -31,7 +34,7 @@ impl AppState {
 
         Ok(Self {
             diesel_pool: Self::diesel_pool_helper()?,
-            qdrant_client: Self::qdrant_client_helper()?,
+            qdrant_client: Self::qdrant_client_helper().await?,
             model: Self::model_helper(&api, &device).await?,
             tokenizer: Self::tokenizer_helper(&api).await?,
             device: Arc::new(device),
@@ -46,8 +49,21 @@ impl AppState {
         .build()?)
     }
 
-    fn qdrant_client_helper() -> anyhow::Result<Arc<Qdrant>> {
+    async fn qdrant_client_helper() -> anyhow::Result<Arc<Qdrant>> {
         let client = Qdrant::from_url(&std::env::var("QDRANT_URL")?).build()?;
+
+        if client
+            .collection_exists(QDRANT_KEYFRAME_COLLECTION_NAME)
+            .await?
+        {
+            client
+                .create_collection(
+                    CreateCollectionBuilder::new(QDRANT_KEYFRAME_COLLECTION_NAME)
+                        .vectors_config(VectorParamsBuilder::new(512, Distance::Cosine)),
+                )
+                .await?;
+        }
+
         Ok(Arc::new(client))
     }
 
