@@ -1,4 +1,4 @@
-use crate::entities::videos::VideoEntity;
+use crate::models::entities::videos::VideoEntity;
 
 #[derive(Debug, Clone, serde::Serialize, utoipa::ToSchema)]
 pub struct VideoDto {

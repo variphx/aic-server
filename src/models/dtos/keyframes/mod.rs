@@ -1,4 +1,4 @@
-use crate::entities::{keyframes::KeyframeEntity, videos::VideoEntity};
+use crate::models::entities::{keyframes::KeyframeEntity, videos::VideoEntity};
 
 #[derive(Debug, Clone, serde::Serialize, utoipa::ToSchema)]
 pub struct KeyframeDto {
