@@ -6,15 +6,21 @@ edition = "2024"
 [dependencies]
 anyhow = "1.0.99"
 axum = "0.8.4"
+candle-core = { version = "0.9.1", features = ["cuda"] }
+candle-transformers = { version = "0.9.1", features = ["cuda"] }
 deadpool-diesel = { version = "0.6.1", features = ["postgres"] }
 diesel = { version = "2.2.12", features = ["postgres"] }
 futures = "0.3.31"
+hf-hub = { version = "0.4.3", features = ["tokio"] }
 qdrant-client = "1.15.0"
+rayon = "1.11.0"
 serde = { version = "1.0.219", features = ["derive"] }
+tokenizers = "0.21.4"
 tokio = { version = "1.47.1", features = ["macros", "rt-multi-thread"] }
 tower = "0.5.2"
-tower-http = { version = "0.6.6", features = ["cors"] }
+tower-http = { version = "0.6.6", features = ["cors", "trace"] }
 tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 utoipa = "5.4.0"
 utoipa-axum = "0.2.0"
 utoipa-swagger-ui = { version = "9.0.2", features = ["axum"] }

@@ -18,7 +18,10 @@ cargo build --release
 
 ```bash
 docker build -t aic-server .
-docker run -p 8080:8080 -e DATABASE_URL="your_database_url_here" aic-server
+docker run -p 8080:8080 \
+  -e DATABASE_URL="your_database_url_here" \
+  -e QDRANT_URL="http://localhost:6333" \
+  aic-server
 ```
 
 ---
@@ -29,9 +32,11 @@ Before running, make sure to set:
 
 ```bash
 export DATABASE_URL="postgres://user:password@localhost:5432/db_name"
+export QDRANT_URL="http://localhost:6334"
 ```
 
-This is required for database connectivity.
+- `DATABASE_URL` → PostgreSQL database connection string
+- `QDRANT_URL` → Qdrant vector database endpoint (6333 for HTTP vs. 6334 for gRPC)
 
 ---
 
@@ -61,6 +66,7 @@ AIC Server/
 - 🐳 Dockerized for easy deployment
 - 📚 Interactive Swagger UI
 - 🗄️ PostgreSQL database support
+- 🔍 Qdrant vector database integration
 
 ---
 

@@ -30,9 +30,3 @@ impl From<(VideoEntity, KeyframeEntity)> for KeyframeDto {
         Self::from((keyframe, video))
     }
 }
-
-#[derive(Debug, Clone, Copy, serde::Deserialize)]
-pub struct VectoredKeyframeDto {
-    id: i64,
-    score: f64,
-}

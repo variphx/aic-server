@@ -12,7 +12,9 @@ pub struct KeyframeService<'a> {
 
 impl<'a> From<&'a AppState> for KeyframeService<'a> {
     fn from(value: &'a AppState) -> Self {
-        Self { pool: value.pool() }
+        Self {
+            pool: value.diesel_pool(),
+        }
     }
 }
 

@@ -12,7 +12,9 @@ pub struct VideoService<'a> {
 
 impl<'a> From<&'a AppState> for VideoService<'a> {
     fn from(value: &'a AppState) -> Self {
-        Self { pool: value.pool() }
+        Self {
+            pool: value.diesel_pool(),
+        }
     }
 }
 
@@ -25,6 +27,6 @@ impl<'a> VideoService<'a> {
 impl<'a> VideoService<'a> {
     pub async fn find_by_id(&self, id: i64) -> anyhow::Result<Option<VideoDto>> {
         let repository = VideoRepository::from(self);
-        Ok(repository.find_by_id(id).await?.map(Into::into))
+        Ok(repository.find_by_id(id).await?.map(VideoDto::from))
     }
 }
