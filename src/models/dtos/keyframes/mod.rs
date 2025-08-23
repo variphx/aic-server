@@ -4,7 +4,7 @@ use crate::models::entities::{keyframes::KeyframeEntity, videos::VideoEntity};
 pub struct KeyframeDto {
     id: i64,
     path: String,
-    timestamp: f64,
+    timestamp: f32,
 }
 
 impl From<(KeyframeEntity, VideoEntity)> for KeyframeDto {

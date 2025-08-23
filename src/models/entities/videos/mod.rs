@@ -5,6 +5,7 @@ pub struct VideoEntity {
     id: i64,
     l: i16,
     v: i16,
+    watch_url: String,
 }
 
 impl VideoEntity {
@@ -18,5 +19,9 @@ impl VideoEntity {
 
     pub fn v(&self) -> i16 {
         self.v
+    }
+
+    pub fn watch_url_mut(&mut self) -> &mut String {
+        &mut self.watch_url
     }
 }

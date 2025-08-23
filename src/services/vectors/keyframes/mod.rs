@@ -1,6 +1,6 @@
 use candle_core::{Device, Tensor};
 use candle_transformers::models::clip::ClipModel;
-use qdrant_client::{Qdrant, qdrant::SearchPointsBuilder};
+use qdrant_client::{Qdrant, qdrant::QueryPointsBuilder};
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use tokenizers::Tokenizer;
 
@@ -50,11 +50,11 @@ impl<'a> VectorizedKeyframeService<'a> {
 
         let query_result = self
             .client
-            .search_points(SearchPointsBuilder::new(
-                "keyframes",
-                embeddings.squeeze(0)?.to_vec1::<f32>()?,
-                top_k,
-            ))
+            .query(
+                QueryPointsBuilder::new("keyframes")
+                    .query(embeddings.squeeze(0)?.to_vec1::<f32>()?)
+                    .limit(top_k),
+            )
             .await?
             .result;
 

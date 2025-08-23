@@ -4,7 +4,7 @@
 pub struct KeyframeEntity {
     id: i64,
     video_related_frame_id: i16,
-    video_related_frame_timestamp: f64,
+    video_related_frame_timestamp: f32,
 }
 
 impl KeyframeEntity {
@@ -16,7 +16,7 @@ impl KeyframeEntity {
         self.video_related_frame_id
     }
 
-    pub fn video_related_frame_timestamp(&self) -> f64 {
+    pub fn video_related_frame_timestamp(&self) -> f32 {
         self.video_related_frame_timestamp
     }
 }
