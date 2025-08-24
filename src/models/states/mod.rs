@@ -1,43 +1,22 @@
 use std::sync::Arc;
 
-use candle_core::{DType, Device};
-use candle_transformers::models::{
-    clip::{ClipConfig, ClipModel},
-    mimi::candle_nn::VarBuilder,
-};
 use deadpool_diesel::{
     Runtime,
     postgres::{Manager, Pool},
 };
-use hf_hub::api::tokio::ApiRepo;
-use qdrant_client::{
-    Qdrant,
-    qdrant::{CreateCollectionBuilder, Distance, VectorParamsBuilder},
-};
-use tokenizers::Tokenizer;
-
-use crate::constants::{EMBEDDING_MODEL_NAME, QDRANT_KEYFRAME_COLLECTION_NAME};
+use qdrant_client::Qdrant;
 
 #[derive(Clone)]
 pub struct AppState {
-    device: Arc<Device>,
     diesel_pool: Pool,
-    model: Arc<ClipModel>,
     qdrant_client: Arc<Qdrant>,
-    tokenizer: Arc<Tokenizer>,
 }
 
 impl AppState {
     pub async fn new() -> anyhow::Result<Self> {
-        let api = hf_hub::api::tokio::Api::new()?.model(EMBEDDING_MODEL_NAME.to_owned());
-        let device = Device::cuda_if_available(0)?;
-
         Ok(Self {
             diesel_pool: Self::diesel_pool_helper()?,
             qdrant_client: Self::qdrant_client_helper().await?,
-            model: Self::model_helper(&api, &device).await?,
-            tokenizer: Self::tokenizer_helper(&api).await?,
-            device: Arc::new(device),
         })
     }
 
@@ -50,55 +29,20 @@ impl AppState {
     }
 
     async fn qdrant_client_helper() -> anyhow::Result<Arc<Qdrant>> {
-        let client = Qdrant::from_url(&std::env::var("QDRANT_URL")?).build()?;
-
-        if client
-            .collection_exists(QDRANT_KEYFRAME_COLLECTION_NAME)
-            .await?
-        {
-            client
-                .create_collection(
-                    CreateCollectionBuilder::new(QDRANT_KEYFRAME_COLLECTION_NAME)
-                        .vectors_config(VectorParamsBuilder::new(512, Distance::Cosine)),
-                )
-                .await?;
-        }
-
-        Ok(Arc::new(client))
-    }
-
-    async fn model_helper(api: &ApiRepo, device: &Device) -> anyhow::Result<Arc<ClipModel>> {
-        let model_path = api.get("pytorch_model.bin").await?;
-        let vb = VarBuilder::from_pth(model_path, DType::F32, device)?;
-        let config = ClipConfig::vit_base_patch32();
-
-        Ok(Arc::new(ClipModel::new(vb, &config)?))
-    }
-
-    async fn tokenizer_helper(api: &ApiRepo) -> anyhow::Result<Arc<Tokenizer>> {
-        let tokenizer_file = api.get("tokenizer.json").await?;
-        Ok(Arc::new(
-            Tokenizer::from_file(tokenizer_file).map_err(anyhow::Error::msg)?,
+        let client = Qdrant::from_url(&format!(
+            "http://{}:{}",
+            std::env::var("QDRANT_HOST")?,
+            std::env::var("QDRANT_GRPC_PORT")?
         ))
-    }
-
-    pub fn device(&self) -> &Device {
-        &self.device
+        .build()?;
+        Ok(Arc::new(client))
     }
 
     pub fn diesel_pool(&self) -> &Pool {
         &self.diesel_pool
     }
 
-    pub fn model(&self) -> &ClipModel {
-        &self.model
-    }
-
     pub fn qdrant_client(&self) -> &Qdrant {
         &self.qdrant_client
-    }
-
-    pub fn tokenizer(&self) -> &Tokenizer {
-        &self.tokenizer
     }
 }

@@ -1,3 +1,4 @@
+pub mod embeddings;
 pub mod keyframes;
-pub mod vectors;
+pub mod vector_queries;
 pub mod videos;
