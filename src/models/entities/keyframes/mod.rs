@@ -13,10 +13,6 @@ impl KeyframeEntity {
         self.id
     }
 
-    pub fn name(&self) -> &str {
-        &self.name
-    }
-
     pub fn frame_index(&self) -> i64 {
         self.frame_index
     }
