@@ -3,8 +3,7 @@
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct VideoEntity {
     id: i64,
-    l: i16,
-    v: i16,
+    name: String,
     watch_url: String,
 }
 
@@ -13,15 +12,11 @@ impl VideoEntity {
         self.id
     }
 
-    pub fn l(&self) -> i16 {
-        self.l
-    }
-
-    pub fn v(&self) -> i16 {
-        self.v
-    }
-
     pub fn watch_url_mut(&mut self) -> &mut String {
         &mut self.watch_url
+    }
+    
+    pub fn name_mut(&mut self) -> &mut String {
+        &mut self.name
     }
 }

@@ -2,6 +2,7 @@
 pub struct VectorizedKeyframeRequestDto {
     prompt: String,
     top_k: u64,
+    object_threshold: f64,
 }
 
 impl VectorizedKeyframeRequestDto {
@@ -11,5 +12,9 @@ impl VectorizedKeyframeRequestDto {
 
     pub fn top_k(&self) -> u64 {
         self.top_k
+    }
+    
+    pub fn object_threshold(&self) -> f64 {
+        self.object_threshold
     }
 }

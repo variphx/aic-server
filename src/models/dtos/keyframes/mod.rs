@@ -4,23 +4,22 @@ use crate::models::entities::{keyframes::KeyframeEntity, videos::VideoEntity};
 pub struct KeyframeDto {
     id: i64,
     path: String,
-    timestamp: f32,
+    frame_index: i64,
+    frame_timestamp: f32,
 }
 
 impl From<(KeyframeEntity, VideoEntity)> for KeyframeDto {
     fn from((keyframe, video): (KeyframeEntity, VideoEntity)) -> Self {
         let id = keyframe.id();
-        let timestamp = keyframe.video_related_frame_timestamp();
-        let path = format!(
-            "/static/keyframes/L{}_V{:0>3}/{:0>3}.jpg",
-            video.l(),
-            video.v(),
-            keyframe.video_related_frame_id()
-        );
+        let frame_index = keyframe.frame_index();
+        let frame_timestamp = keyframe.frame_timestamp();
+        let video_id = video.id();
+        let path = format!("/static/keyframes/{}/{:0>3}.jpg", video_id, keyframe.name());
         Self {
             id,
             path,
-            timestamp,
+            frame_index,
+            frame_timestamp,
         }
     }
 }

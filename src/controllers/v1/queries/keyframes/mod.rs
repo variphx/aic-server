@@ -7,7 +7,7 @@ use crate::{
         dtos::vectors::keyframes::{VectorizedKeyframeDto, VectorizedKeyframeRequestDto},
         states::AppState,
     },
-    services::vector_queries::keyframes::VectorizedKeyframeService,
+    services::queries::keyframes::VectorizedKeyframeService,
 };
 
 pub fn router() -> OpenApiRouter<AppState> {

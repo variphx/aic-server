@@ -3,8 +3,9 @@
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct KeyframeEntity {
     id: i64,
-    video_related_frame_id: i16,
-    video_related_frame_timestamp: f32,
+    name: String,
+    frame_index: i64,
+    frame_timestamp: f32,
 }
 
 impl KeyframeEntity {
@@ -12,11 +13,19 @@ impl KeyframeEntity {
         self.id
     }
 
-    pub fn video_related_frame_id(&self) -> i16 {
-        self.video_related_frame_id
+    pub fn name(&self) -> &str {
+        &self.name
     }
 
-    pub fn video_related_frame_timestamp(&self) -> f32 {
-        self.video_related_frame_timestamp
+    pub fn frame_index(&self) -> i64 {
+        self.frame_index
+    }
+
+    pub fn frame_timestamp(&self) -> f32 {
+        self.frame_timestamp
+    }
+
+    pub fn name_mut(&mut self) -> &mut String {
+        &mut self.name
     }
 }

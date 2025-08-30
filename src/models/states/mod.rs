@@ -5,11 +5,13 @@ use deadpool_diesel::{
     postgres::{Manager, Pool},
 };
 use qdrant_client::Qdrant;
+use translators::GoogleTranslator;
 
 #[derive(Clone)]
 pub struct AppState {
     diesel_pool: Pool,
     qdrant_client: Arc<Qdrant>,
+    translator: GoogleTranslator,
 }
 
 impl AppState {
@@ -17,6 +19,7 @@ impl AppState {
         Ok(Self {
             diesel_pool: Self::diesel_pool_helper()?,
             qdrant_client: Self::qdrant_client_helper().await?,
+            translator: GoogleTranslator::default(),
         })
     }
 
@@ -44,5 +47,9 @@ impl AppState {
 
     pub fn qdrant_client(&self) -> &Qdrant {
         &self.qdrant_client
+    }
+
+    pub fn translator(&self) -> &GoogleTranslator {
+        &self.translator
     }
 }

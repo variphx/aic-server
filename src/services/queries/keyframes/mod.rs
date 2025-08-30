@@ -3,12 +3,10 @@ use qdrant_client::{
     qdrant::{PrefetchQueryBuilder, Query, QueryPointsBuilder},
 };
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
+use translators::{GoogleTranslator, Translator};
 
 use crate::{
-    constants::{
-        QDRANT_KEYFRAME_COLLECTION_IMAGE_VECTOR_NAME, QDRANT_KEYFRAME_COLLECTION_NAME,
-        QDRANT_KEYFRAME_COLLECTION_OBJECT_VECTOR_NAME,
-    },
+    constants::QDRANT_KEYFRAME_COLLECTION_NAME,
     models::{dtos::vectors::keyframes::VectorizedKeyframeDto, states::AppState},
     services::embeddings::texts::TextEmbeddingService,
 };
@@ -16,12 +14,14 @@ use crate::{
 #[derive(Clone, Copy)]
 pub struct VectorizedKeyframeService<'a> {
     client: &'a Qdrant,
+    translator: &'a GoogleTranslator,
 }
 
 impl<'a> From<&'a AppState> for VectorizedKeyframeService<'a> {
     fn from(value: &'a AppState) -> Self {
         Self {
             client: value.qdrant_client(),
+            translator: value.translator(),
         }
     }
 }
@@ -37,7 +37,8 @@ impl<'a> VectorizedKeyframeService<'a> {
         text: &str,
         top_k: u64,
     ) -> anyhow::Result<Vec<VectorizedKeyframeDto>> {
-        let embeddings = self.embed_text(text).await?;
+        let translated_text = self.translator.translate_async(text, "vi", "en").await?;
+        let embeddings = self.embed_text(&translated_text).await?;
 
         let query_result = self
             .client
@@ -46,11 +47,11 @@ impl<'a> VectorizedKeyframeService<'a> {
                     .add_prefetch(
                         PrefetchQueryBuilder::default()
                             .query(Query::new_nearest(embeddings.clone()))
-                            .using(QDRANT_KEYFRAME_COLLECTION_IMAGE_VECTOR_NAME)
-                            .limit(100u64),
+                            .using("images")
+                            .limit(top_k * 10),
                     )
                     .query(Query::new_nearest(embeddings))
-                    .using(QDRANT_KEYFRAME_COLLECTION_OBJECT_VECTOR_NAME)
+                    .using("objects")
                     .limit(top_k),
             )
             .await?
