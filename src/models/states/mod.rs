@@ -24,6 +24,7 @@ impl AppState {
     }
 
     fn diesel_pool_helper() -> anyhow::Result<Pool> {
+        tracing::debug!("initializing database connection pool");
         Ok(Pool::builder(Manager::new(
             std::env::var("DATABASE_URL").expect("`DATABASE_URL` environment variable must be set"),
             Runtime::Tokio1,
@@ -32,6 +33,7 @@ impl AppState {
     }
 
     async fn qdrant_client_helper() -> anyhow::Result<Arc<Qdrant>> {
+        tracing::debug!("initializing qdrant client");
         let client = Qdrant::from_url(
             &std::env::var("QDRANT_URL").expect("`QDRANT_URL` environment variable must be set"),
         )

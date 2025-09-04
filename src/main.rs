@@ -28,7 +28,6 @@ mod services;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    println!("test");
     tracing_subscriber::registry()
         .with(
             tracing_subscriber::EnvFilter::try_from_default_env().unwrap_or_else(|_| {
