@@ -32,11 +32,13 @@ impl AppState {
     }
 
     async fn qdrant_client_helper() -> anyhow::Result<Arc<Qdrant>> {
-        let client = Qdrant::from_url(&format!(
-            "http://{}:{}",
-            std::env::var("QDRANT_HOST")?,
-            std::env::var("QDRANT_GRPC_PORT")?
-        ))
+        let client = Qdrant::from_url(
+            &std::env::var("QDRANT_URL").expect("`QDRANT_URL` environment variable must be set"),
+        )
+        .api_key(
+            std::env::var("QDRANT_API_KEY")
+                .expect("`QDRANT_API_KEY` environment variable must be set"),
+        )
         .build()?;
         Ok(Arc::new(client))
     }

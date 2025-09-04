@@ -1,6 +1,6 @@
 use qdrant_client::{
     Qdrant,
-    qdrant::{PrefetchQueryBuilder, Query, QueryPointsBuilder},
+    qdrant::{Query, QueryPointsBuilder},
 };
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use translators::{GoogleTranslator, Translator};
@@ -44,14 +44,8 @@ impl<'a> VectorizedKeyframeService<'a> {
             .client
             .query(
                 QueryPointsBuilder::new(QDRANT_KEYFRAME_COLLECTION_NAME)
-                    .add_prefetch(
-                        PrefetchQueryBuilder::default()
-                            .query(Query::new_nearest(embeddings.clone()))
-                            .using("images")
-                            .limit(top_k * 10),
-                    )
                     .query(Query::new_nearest(embeddings))
-                    .using("objects")
+                    .using("images")
                     .limit(top_k),
             )
             .await?

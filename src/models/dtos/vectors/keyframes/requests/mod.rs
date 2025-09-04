@@ -13,8 +13,4 @@ impl VectorizedKeyframeRequestDto {
     pub fn top_k(&self) -> u64 {
         self.top_k
     }
-    
-    // pub fn object_threshold(&self) -> f64 {
-    //     self.object_threshold
-    // }
 }
