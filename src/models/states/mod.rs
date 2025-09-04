@@ -25,7 +25,7 @@ impl AppState {
 
     fn diesel_pool_helper() -> anyhow::Result<Pool> {
         Ok(Pool::builder(Manager::new(
-            std::env::var("DATABASE_URL")?,
+            std::env::var("DATABASE_URL").expect("`DATABASE_URL` environment variable must be set"),
             Runtime::Tokio1,
         ))
         .build()?)
