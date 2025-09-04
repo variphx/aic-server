@@ -1,3 +1,11 @@
+---
+title: AIC Server
+emoji:
+colorFrom: yellow
+colorTo: purple
+sdk: docker
+---
+
 # 🚀 AIC Server
 
 A high-performance backend service built with **Rust**.  
