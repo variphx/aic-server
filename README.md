@@ -1,6 +1,6 @@
 ---
 title: AIC Server
-emoji:
+emoji: 😡
 colorFrom: yellow
 colorTo: purple
 sdk: docker
