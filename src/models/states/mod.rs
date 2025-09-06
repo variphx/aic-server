@@ -18,7 +18,7 @@ impl AppState {
     pub async fn new() -> anyhow::Result<Self> {
         Ok(Self {
             diesel_pool: Self::diesel_pool_helper()?,
-            qdrant_client: Self::qdrant_client_helper().await?,
+            qdrant_client: Self::qdrant_client_helper().await,
             translator: GoogleTranslator::default(),
         })
     }
@@ -32,7 +32,7 @@ impl AppState {
         .build()?)
     }
 
-    async fn qdrant_client_helper() -> anyhow::Result<Arc<Qdrant>> {
+    async fn qdrant_client_helper() -> Arc<Qdrant> {
         tracing::debug!("initializing qdrant client");
         let client = Qdrant::from_url(
             &std::env::var("QDRANT_URL").expect("`QDRANT_URL` environment variable must be set"),
@@ -41,8 +41,10 @@ impl AppState {
             std::env::var("QDRANT_API_KEY")
                 .expect("`QDRANT_API_KEY` environment variable must be set"),
         )
-        .build()?;
-        Ok(Arc::new(client))
+        .build()
+        .expect("Qdrant client initialization failed");
+
+        Arc::new(client)
     }
 
     pub fn diesel_pool(&self) -> &Pool {
